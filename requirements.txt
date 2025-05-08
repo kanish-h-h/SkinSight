@@ -1,0 +1,17 @@
+# Core
+tensorflow==2.10.0   # colab support TF 2.10 (GPU FT)
+opencv-python-headless==4.7.0.72  # lightweight CLI
+scikit-image==0.19.3
+pandas==1.5.3
+sqlalchemy==2.0.15
+tqdm==4.65.0
+
+# Dev & Testing
+pytest==7.3.1
+black==23.3.0   # code formatting
+mypy==1.3.0  # static typing
+python-dotenv==1.0.0
+
+# Packaging
+setuptools==67.7.2
+wheel==0.40.0

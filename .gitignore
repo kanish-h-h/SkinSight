@@ -1,0 +1,18 @@
+# Data and models
+data/*
+models/*
+
+# Environments
+venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# logs and outputs
+logs/
+results/
+
+# Hugging  Face token
+.huggingface/

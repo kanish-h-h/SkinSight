@@ -6,14 +6,15 @@ import pkg_resources
 REQUIREMENTS = {
     "tensorflow": "2.10.0",
     "opencv-python-headless": "4.7.0.72",
-    "huggingface-hub": "0.16.4"
+    "huggingface-hub": "0.16.4",
 }
 
 
 def test_tensorflow_gpu():
     """Verify TensorFlow can detect GPU."""
     import tensorflow as tf
-    gpu_available = tf.config.list_physical_devices('GPU')
+
+    gpu_available = tf.config.list_physical_devices("GPU")
     assert gpu_available, "GPU not detected by TensorFlow!"
     print(f"✅ TensorFlow {tf.__version__} sees GPU: {gpu_available}")
 
@@ -26,7 +27,8 @@ def test_package_versions():
             installed_version = pkg_resources.get_distribution(pkg).version
             if installed_version != expected_version:
                 failures.append(
-                    f"{pkg} (expected: {expected_version}, got: {installed_version})")
+                    f"{pkg} (expected: {expected_version}, got: {installed_version})"
+                )
         except pkg_resources.DistributionNotFound:
             failures.append(f"{pkg} not installed")
 

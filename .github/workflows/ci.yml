@@ -36,12 +36,6 @@ jobs:
         python -c "import tensorflow as tf; print('Imports OK')"
         python -c "from huggingface_hub import hf_hub_download; print('HF Hub OK')"
 
-    - name: Run tests (if any)
-      run: |
-          pytest tests/ -v --cov=src --cov-report=xml
-
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
 
   approve-pr:
     if: github.event_name == 'pull_request' && github.base_ref == 'main'

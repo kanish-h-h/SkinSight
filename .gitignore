@@ -1,6 +1,7 @@
 # Data and models
 data/*
-models/
+models/raw/*
+models/processed/*
 !models/README.md
 
 # Environments

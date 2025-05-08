@@ -1,6 +1,7 @@
 # Data and models
 data/*
-models/*
+models/
+!models/README.md
 
 # Environments
 venv/

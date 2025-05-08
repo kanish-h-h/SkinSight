@@ -1,13 +1,14 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [ "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 jobs:
-  test:
+  validate:
+    name: Validate Changes
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -29,27 +30,39 @@ jobs:
       run: |
           black --check src/ tests/
 
-    - name: verify critical imports
+    - name: Verify critical imports
       run: |
         python -c "import tensorflow as tf; print('Imports OK')"
+        python -c "from huggingface_hub import hf_hub_download; print('HF Hub OK')"
 
     - name: Run tests (if any)
       run: |
-          pytest tests/ || echo "No tests found"
+          pytest tests/ -v --cov=src --cov-report=xml
 
-  # Only run when PR is opened to main
-  pr-to-main:
-    if: github.event_name == "pull_request" && github.base_ref == 'main'
-    needs: test
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+
+  approve-pr:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    needs: validate
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@4
-
-      - name: Validate PR title
+      - name: Check PR title
         run: |
-          if [[ ! ${{ github.event.pull_request.title }} =~ ^(feat|fix|docs|refactor|test|chore): ]]; then
-            echo "PR title must follow semantic format (e.g., 'feat: add UNet')"
+          if [[ ! "${{ github.event.pull_request.title }}" =~ ^(feat|fix|docs|refactor|test|chore): ]]; then
+            echo "::error::PR title must follow semantic format (e.g., 'feat: add UNet')"
             exit 1
           fi
+
+      - name: Label approved PRs
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['approved-for-merge']
+            })

@@ -35,29 +35,3 @@ jobs:
       run: |
         python -c "import tensorflow as tf; print('Imports OK')"
         python -c "from huggingface_hub import hf_hub_download; print('HF Hub OK')"
-
-
-  approve-pr:
-    if: github.event_name == 'pull_request' && github.base_ref == 'main'
-    needs: validate
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check PR title
-        run: |
-          if [[ ! "${{ github.event.pull_request.title }}" =~ ^(feat|fix|docs|refactor|test|chore): ]]; then
-            echo "::error::PR title must follow semantic format (e.g., 'feat: add UNet')"
-            exit 1
-          fi
-
-      - name: Label approved PRs
-        if: success()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            await github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['approved-for-merge']
-            })

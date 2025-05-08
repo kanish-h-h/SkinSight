@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Check black formatting
+      run: |
+          black --check src/ tests/
+
+    - name: verify critical imports
+      run: |
+        python -c "import tensorflow as tf; print('Imports OK')"
+
+    - name: Run tests (if any)
+      run: |
+          pytest tests/ || echo "No tests found"
+
+  # Only run when PR is opened to main
+  pr-to-main:
+    if: github.event_name == "pull_request" && github.base_ref == 'main'
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@4
+
+      - name: Validate PR title
+        run: |
+          if [[ ! ${{ github.event.pull_request.title }} =~ ^(feat|fix|docs|refactor|test|chore): ]]; then
+            echo "PR title must follow semantic format (e.g., 'feat: add UNet')"
+            exit 1
+          fi

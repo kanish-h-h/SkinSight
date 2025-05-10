@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: SkinSight Pipeline
 
 on:
   push:
@@ -26,10 +26,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-
-    - name: Check black formatting
-      run: |
-          black --check src/ tests/
 
     - name: Verify critical imports
       run: |

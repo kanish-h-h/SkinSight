@@ -14,7 +14,7 @@ def preprocess_skin_image(image_path: str, target_size=(256, 256)):
     # CLAHE Contrast Enhancement (Critical for low-contrast lesions)
     lab = cv2.cvtColor(image, cv2.COLOR_RGB2LAB)
     l, a, b = cv2.split(lab)
-    clahe = cv2.createCLAHE(clipLimit=2.0, titleGridSize=(8, 8))
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
     l_clahe = clahe.apply(l)
     lab_clahe = cv2.merge((l_clahe, a, b))
     image_clahe = cv2.cvtColor(lab_clahe, cv2.COLOR_LAB2RGB)

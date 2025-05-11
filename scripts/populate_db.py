@@ -5,7 +5,7 @@ import random
 
 
 def populate_segmentation_data(db_path="data/metadata.db",
-                               data_dir="data/processed/segmentation"):
+                               data_dir="/content/drive/MyDrive/Skin-Sight/data/processed/segmentation"):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 

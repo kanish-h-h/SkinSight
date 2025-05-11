@@ -11,7 +11,7 @@ def init_db():
             image_path TEXT NOT NULL,
             mask_path TEXT,
             resolution INTEGER,
-            split_group TEXT  # train/test/val
+            split_group TEXT
         )
     """)
     conn.commit()

@@ -1,13 +1,12 @@
 name: SkinSight Pipeline
 
 on:
-  push:
-    branches: [ "dev" ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
 
 jobs:
   validate:
+    if: github.base_ref == 'main' && github.head_ref == 'dev'
     name: Validate Changes
     runs-on: ubuntu-latest
     timeout-minutes: 5
